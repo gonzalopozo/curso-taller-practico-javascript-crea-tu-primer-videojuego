@@ -8,6 +8,11 @@ const btnDown = document.querySelector('#down');
 let canvasSize;
 let elementsSize;
 
+const playerPosition = {
+    x: undefined,
+    y: undefined
+}
+
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
@@ -21,7 +26,7 @@ function setCanvasSize() {
     canvas.setAttribute('width', canvasSize);
     canvas.setAttribute('height', canvasSize);
 
-    elementsSize = (canvasSize / 10) - 1.75;
+    elementsSize = (canvasSize / 10) - 1;
 
     startGame();
 }
@@ -31,9 +36,9 @@ function startGame() {
 
     // game.font = elementsSize + "px Verdana";
     game.font = `${elementsSize}px Verdana`;
-    game.textAlign = "start";
+    game.textAlign = "end";
 
-    const map = maps[1];
+    const map = maps[0];
     const mapRows = map.trim().split('\n');
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
     console.log({ map, mapRows, mapRowsCols });
@@ -41,20 +46,40 @@ function startGame() {
     mapRowsCols.forEach((row, rowI) => {
         row.forEach((col, colI) => {
             const emoji = emojis[col];
-            const posX = elementsSize * (colI);
-            const posY = elementsSize * (rowI + 1);
+            const posX = elementsSize * (colI + 1.25);
+            const posY = elementsSize * (rowI + 0.95);
+
+            if (col == 'O') {
+                playerPosition.x = posX;
+                playerPosition.y = posY;
+
+                console.log({playerPosition});
+            }
+
             game.fillText(emoji, posX, posY);
-            console.log({ row, rowI, col, colI });
+
         })
     });
 
-    // for (let row = 1; row <= 10; row++) {
-    //     for (let col = 0; col < 10; col++) {
-    //         game.fillText(emojis[mapRowsCols[row - 1][col]], elementsSize * col, elementsSize * row);
-    //     }
-    // }       
+    movePlayer();
 }
 
+function movePlayer() {
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+}
+
+// 1º Forma de la que se hizo.
+// 
+// windows.addEventListener('keydown', moveByKeys);
+// 
+// function moveByKeys(event) {
+//     if (event.key == 'ArrowUp') moveUp();
+//     else if (event.key == 'ArrowLeft') moveLeft();
+//     else if (event.key == 'ArrowRight') moveRight();
+//     else if (event.key == 'ArrowDown') moveDown();
+// }
+
+// 2º Forma y más optima
 window.addEventListener('keydown', (e) => {
     const tecla = e.key;
 
@@ -72,36 +97,31 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
-// 1º Forma de la que se hizo.
-// 
-// windows.addEventListener('keydown', moveByKeys);
-// 
-// function moveByKeys(event) {
-//     if (event.key == 'ArrowUp') moveUp();
-//     else if (event.key == 'ArrowLeft') moveLeft();
-//     else if (event.key == 'ArrowRight') moveRight();
-//     else if (event.key == 'ArrowDown') moveDown();
-// }
-
 btnUp.addEventListener('click', moveUp);
 btnLeft.addEventListener('click', moveLeft);
 btnRight.addEventListener('click', moveRight);
 btnDown.addEventListener('click', moveDown);
 
-
-
 function moveUp() {
     console.log("¡Me quiero mover hacia arriba!");
+    playerPosition.y -= 50.046;
+    movePlayer();
 }
 
 function moveLeft() {
     console.log("¡Me quiero mover hacia la izquierda!");
+    playerPosition.x -= 65.85;
+    movePlayer();
 }
 
 function moveRight() {
     console.log("¡Me quiero mover hacia la derecha!");
+    playerPosition.x += 65.85;
+    movePlayer();
 }
 
 function moveDown() {
     console.log("¡Me quiero mover hacia abajo!");
+    playerPosition.y += 50.046;
+    movePlayer();
 }
