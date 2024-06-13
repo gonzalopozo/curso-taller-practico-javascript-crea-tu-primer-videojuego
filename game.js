@@ -38,11 +38,13 @@ function startGame() {
     game.font = `${elementsSize}px Verdana`;
     game.textAlign = "end";
 
-    const map = maps[0];
+    const map = maps[1];
     const mapRows = map.trim().split('\n');
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
     console.log({ map, mapRows, mapRowsCols });
 
+    game.clearRect(0, 0, canvasSize, canvasSize);
+    
     mapRowsCols.forEach((row, rowI) => {
         row.forEach((col, colI) => {
             const emoji = emojis[col];
@@ -50,10 +52,14 @@ function startGame() {
             const posY = elementsSize * (rowI + 0.95);
 
             if (col == 'O') {
-                playerPosition.x = posX;
-                playerPosition.y = posY;
 
-                console.log({playerPosition});
+                if (!playerPosition.x && !playerPosition.y) {
+                    playerPosition.x = posX;
+                    playerPosition.y = posY;
+
+                    console.log({playerPosition});
+                }
+                
             }
 
             game.fillText(emoji, posX, posY);
@@ -61,7 +67,7 @@ function startGame() {
         })
     });
 
-    movePlayer();
+    movePlayer();   
 }
 
 function movePlayer() {
@@ -104,24 +110,24 @@ btnDown.addEventListener('click', moveDown);
 
 function moveUp() {
     console.log("¡Me quiero mover hacia arriba!");
-    playerPosition.y -= 50.046;
-    movePlayer();
+    playerPosition.y -= 52.5;
+    startGame();
 }
 
 function moveLeft() {
     console.log("¡Me quiero mover hacia la izquierda!");
-    playerPosition.x -= 65.85;
-    movePlayer();
+    playerPosition.x -= 52.5;
+    startGame();
 }
 
 function moveRight() {
     console.log("¡Me quiero mover hacia la derecha!");
-    playerPosition.x += 65.85;
-    movePlayer();
+    playerPosition.x += 52.5;
+    startGame();
 }
 
 function moveDown() {
     console.log("¡Me quiero mover hacia abajo!");
-    playerPosition.y += 50.046;
-    movePlayer();
+    playerPosition.y += 52.5;
+    startGame();
 }
