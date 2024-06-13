@@ -110,24 +110,33 @@ btnDown.addEventListener('click', moveDown);
 
 function moveUp() {
     console.log("¡Me quiero mover hacia arriba!");
-    playerPosition.y -= 52.5;
-    startGame();
+    if ((playerPosition.y - elementsSize) > 0) {
+        playerPosition.y -= elementsSize;
+        startGame();
+    }
 }
 
 function moveLeft() {
     console.log("¡Me quiero mover hacia la izquierda!");
-    playerPosition.x -= 52.5;
-    startGame();
+    if ((playerPosition.x - elementsSize) > elementsSize) {
+        playerPosition.x -= elementsSize;
+        startGame();
+    }
+
 }
 
 function moveRight() {
     console.log("¡Me quiero mover hacia la derecha!");
-    playerPosition.x += 52.5;
-    startGame();
+    if ((playerPosition.x + elementsSize) <= (elementsSize * (9 + 1.25))) {
+        playerPosition.x += elementsSize;
+        startGame();
+    }
 }
 
 function moveDown() {
     console.log("¡Me quiero mover hacia abajo!");
-    playerPosition.y += 52.5;
-    startGame();
+    if ((playerPosition.y + elementsSize) <= canvasSize) {
+        playerPosition.y += elementsSize;
+        startGame();
+    }
 }
