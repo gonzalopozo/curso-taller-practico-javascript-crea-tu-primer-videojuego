@@ -12,6 +12,17 @@ const playerPosition = {
     x: undefined,
     y: undefined
 }
+const giftPosition = {
+    x: undefined,
+    y: undefined
+}
+
+function Bomb(posX, posY) {
+    this.posX = posX;
+    this.posY = posY;
+}
+
+const bombsPositions = [];
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -38,7 +49,7 @@ function startGame() {
     game.font = `${elementsSize}px Verdana`;
     game.textAlign = "end";
 
-    const map = maps[1];
+    const map = maps[0];
     const mapRows = map.trim().split('\n');
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
     console.log({ map, mapRows, mapRowsCols });
@@ -60,6 +71,15 @@ function startGame() {
                     console.log({playerPosition});
                 }
                 
+            } else if (col == 'I') {
+
+                giftPosition.x = posX;
+                giftPosition.y = posY;
+
+            } else if (col == 'X') {
+
+                bombsPositions.push(new Bomb(posX, posY));
+
             }
 
             game.fillText(emoji, posX, posY);
@@ -71,7 +91,33 @@ function startGame() {
 }
 
 function movePlayer() {
+    // 1º Forma de la que se hizo.
+    // const realPlayerPosX = Math.floor(playerPosition.x);
+    // const realPlayerPosY = Math.floor(playerPosition.y);
+    // const realGiftPosX = Math.floor(giftPosition.x);
+    // const realGiftPosY = Math.floor(giftPosition.y);
+
+
+    // if ((realPlayerPosX === realGiftPosX) && (realPlayerPosY === realGiftPosY)) {
+    //     console.log("¡GANO ESE WUEON!");
+    // }
+
+    // 2º Forma de la que se hizo, en teoria más optima.
+    const collisionX = Math.floor(playerPosition.x) === Math.floor(giftPosition.x);
+    const collisionY = Math.floor(playerPosition.y) === Math.floor(giftPosition.y);
+    const collision = collisionX && collisionY;
+    const collisionWithBomb = playerCollisionWithBomb(playerPosition.x, playerPosition.y);
+
+    if (collision) {
+        console.log("¡GANO ESE WUEON!");
+    } else if (collisionWithBomb) {
+        console.log("WUEON, BOMBA CABRON");
+    }
+
+
+
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+    
 }
 
 // 1º Forma de la que se hizo.
@@ -139,4 +185,31 @@ function moveDown() {
         playerPosition.y += elementsSize;
         startGame();
     }
+}
+
+function playerCollisionWithBomb(playerPosX, playerPosY) {
+    let collision = false;
+
+    bombsPositions.forEach(element => {
+        
+        const collisionX = Math.floor(playerPosX) === Math.floor(element.posX);
+        const collisionY = Math.floor(playerPosY) === Math.floor(element.posY);
+
+        let a = Math.floor(playerPosX);
+        let b = Math.floor(element.posX);
+        let c = Math.floor(playerPosY);
+        let d = Math.floor(element.posY);
+
+        collision = collisionX && collisionY;
+
+        if (collision) {
+            console.log({ a, b, c, d, collisionX, collisionY, collision });
+            console.log("llego cabron");
+            return collision;
+        }
+
+        
+    });
+
+    return collision;
 }
