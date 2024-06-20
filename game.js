@@ -22,7 +22,7 @@ function Bomb(posX, posY) {
     this.posY = posY;
 }
 
-const bombsPositions = [];
+let bombsPositions = [];
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -54,6 +54,9 @@ function startGame() {
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
     console.log({ map, mapRows, mapRowsCols });
 
+    // Hemos cambiado el tipo de variable 'const' a 'let', pero usando el siguiente código se podria limpiar el array manteniendo la variable como 'const':
+    // bombsPositions.splice(0, bombsPositions.length);
+    bombsPositions = [];
     game.clearRect(0, 0, canvasSize, canvasSize);
     
     mapRowsCols.forEach((row, rowI) => {
@@ -80,6 +83,12 @@ function startGame() {
 
                 bombsPositions.push(new Bomb(posX, posY));
 
+                // El profesor, lo hace de forma que no crea un constructor de bomba, unicamente le hace push de un objeto con los atributos "x" e "y".
+                // bombsPositions.push({
+                //     x: posX,
+                //     y: posY
+                // })
+
             }
 
             game.fillText(emoji, posX, posY);
@@ -103,16 +112,32 @@ function movePlayer() {
     // }
 
     // 2º Forma de la que se hizo, en teoria más optima.
-    const collisionX = Math.floor(playerPosition.x) === Math.floor(giftPosition.x);
-    const collisionY = Math.floor(playerPosition.y) === Math.floor(giftPosition.y);
-    const collision = collisionX && collisionY;
-    const collisionWithBomb = playerCollisionWithBomb(playerPosition.x, playerPosition.y);
+    const giftCollisionX = Math.floor(playerPosition.x) === Math.floor(giftPosition.x);
+    const giftCollisionY = Math.floor(playerPosition.y) === Math.floor(giftPosition.y);
+    const giftCollision = giftCollisionX && giftCollisionY;
 
-    if (collision) {
+    // En primera instancia yo hice una función que devolvia true o false, dependiendo si el jugador se encontraba sobre una bomba.
+    // const collisionWithBomb = playerCollisionWithBomb(playerPosition.x, playerPosition.y);
+
+    if (giftCollision) {
         console.log("¡GANO ESE WUEON!");
-    } else if (collisionWithBomb) {
+    } /* else if (collisionWithBomb) {
+        console.log("WUEON, BOMBA CABRON");
+    } */
+
+    const collisionWithBomb = bombsPositions.find(bomb => {
+        const bombCollisionX = Math.floor(bomb.posX) == Math.floor(playerPosition.x);
+        const bombCollisionY = Math.floor(bomb.posY) == Math.floor(playerPosition.y);
+
+        return bombCollisionX && bombCollisionY;
+    })
+
+    console.log({collisionWithBomb});
+
+    if (collisionWithBomb) {
         console.log("WUEON, BOMBA CABRON");
     }
+
 
 
 
@@ -187,29 +212,23 @@ function moveDown() {
     }
 }
 
-function playerCollisionWithBomb(playerPosX, playerPosY) {
-    let collision = false;
-
-    bombsPositions.forEach(element => {
-        
-        const collisionX = Math.floor(playerPosX) === Math.floor(element.posX);
-        const collisionY = Math.floor(playerPosY) === Math.floor(element.posY);
-
-        let a = Math.floor(playerPosX);
-        let b = Math.floor(element.posX);
-        let c = Math.floor(playerPosY);
-        let d = Math.floor(element.posY);
-
-        collision = collisionX && collisionY;
-
-        if (collision) {
-            console.log({ a, b, c, d, collisionX, collisionY, collision });
-            console.log("llego cabron");
-            return collision;
-        }
-
-        
-    });
-
-    return collision;
-}
+// Función que devovlia true si el jugador se encotraba sobre una bomba.
+// function playerCollisionWithBomb(playerPosX, playerPosY) {
+//     let collision = false;
+// 
+//     bombsPositions.forEach(element => {
+// 
+//         const collisionX = Math.floor(playerPosX) === Math.floor(element.posX);
+//         const collisionY = Math.floor(playerPosY) === Math.floor(element.posY);
+// 
+//         if (collisionX && collisionY) {
+// 
+//             collision = collisionX && collisionY;
+//             return collision;
+// 
+//         }
+//         
+//     });
+// 
+//     return collision;
+// }
