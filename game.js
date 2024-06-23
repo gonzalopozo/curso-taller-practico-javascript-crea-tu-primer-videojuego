@@ -7,6 +7,7 @@ const btnDown = document.querySelector('#down');
 
 let canvasSize;
 let elementsSize;
+let level = 0;
 
 const playerPosition = {
     x: undefined,
@@ -49,7 +50,13 @@ function startGame() {
     game.font = `${elementsSize}px Verdana`;
     game.textAlign = "end";
 
-    const map = maps[0];
+    const map = maps[level];
+
+    if (!map) {
+        gameWin();
+        return;
+    }
+
     const mapRows = map.trim().split('\n');
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
     console.log({ map, mapRows, mapRowsCols });
@@ -120,7 +127,7 @@ function movePlayer() {
     // const collisionWithBomb = playerCollisionWithBomb(playerPosition.x, playerPosition.y);
 
     if (giftCollision) {
-        console.log("¡GANO ESE WUEON!");
+        levelWin();
     } /* else if (collisionWithBomb) {
         console.log("WUEON, BOMBA CABRON");
     } */
@@ -138,11 +145,17 @@ function movePlayer() {
         console.log("WUEON, BOMBA CABRON");
     }
 
-
-
-
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
-    
+}
+
+function levelWin() {
+    console.log('Subiste de nivel');
+    level++;
+    startGame();
+}
+
+function gameWin() {
+    console.log('¡Ganaste cabron!');
 }
 
 // 1º Forma de la que se hizo.
