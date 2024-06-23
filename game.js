@@ -192,6 +192,14 @@ function levelFail() {
 function gameWin() {
     console.log('¡Ganaste cabron!');
     clearInterval(timeInterval);
+    if (!localStorage.getItem('record')) {
+        localStorage.setItem('record', Date.now() - timeStart);
+    } else if (localStorage.getItem('record') < Date.now() - timeStart) {
+        console.log("Record no superado");
+    } else if (localStorage.getItem('record') > Date.now() - timeStart) {
+        console.log("Record superado");
+        localStorage.setItem('record', Date.now() - timeStart);
+    }
 }
 
 function showLives() {
