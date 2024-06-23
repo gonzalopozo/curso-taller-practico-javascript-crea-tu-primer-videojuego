@@ -4,15 +4,18 @@ const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
+const spanLives = document.querySelector('#lives');
 
 let canvasSize;
 let elementsSize;
 let level = 0;
+let lives = 3;
 
 const playerPosition = {
     x: undefined,
     y: undefined
 }
+
 const giftPosition = {
     x: undefined,
     y: undefined
@@ -60,6 +63,8 @@ function startGame() {
     const mapRows = map.trim().split('\n');
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
     console.log({ map, mapRows, mapRowsCols });
+
+    showLives();
 
     // Hemos cambiado el tipo de variable 'const' a 'let', pero usando el siguiente código se podria limpiar el array manteniendo la variable como 'const':
     // bombsPositions.splice(0, bombsPositions.length);
@@ -142,7 +147,7 @@ function movePlayer() {
     console.log({collisionWithBomb});
 
     if (collisionWithBomb) {
-        console.log("WUEON, BOMBA CABRON");
+        levelFail();
     }
 
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
@@ -154,8 +159,36 @@ function levelWin() {
     startGame();
 }
 
+function levelFail() {
+    console.log('Chocaste con bomba');
+
+    lives--;
+
+    if (lives <= 0) {
+        
+        level = 0;
+        lives = 3;
+
+    }
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    startGame();
+
+}
+
 function gameWin() {
     console.log('¡Ganaste cabron!');
+}
+
+function showLives() {
+    const heartsArray = Array(lives).fill(emojis['HEART']); // [1, 2, 3]
+
+    console.log(heartsArray);
+
+    spanLives.innerHTML = ""; 
+    heartsArray.forEach(heart => spanLives.append(heart));
+
 }
 
 // 1º Forma de la que se hizo.
