@@ -6,6 +6,8 @@ const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
+const spanRecord = document.querySelector('#record');
+const pResult = document.querySelector('#result');
 
 let canvasSize;
 let elementsSize;
@@ -68,6 +70,7 @@ function startGame() {
     if (!timeStart) {
         timeStart = Date.now();
         timeInterval = setInterval(showTime, 1);
+        showRecord();
     }
 
     const mapRows = map.trim().split('\n');
@@ -178,13 +181,14 @@ function levelFail() {
         
         level = 0;
         lives = 3;
-
         timeStart = undefined;
+        clearInterval(timeInterval);
 
     }
 
     playerPosition.x = undefined;
     playerPosition.y = undefined;
+    
     startGame();
 
 }
@@ -192,14 +196,31 @@ function levelFail() {
 function gameWin() {
     console.log('¡Ganaste cabron!');
     clearInterval(timeInterval);
-    if (!localStorage.getItem('record')) {
-        localStorage.setItem('record', Date.now() - timeStart);
-    } else if (localStorage.getItem('record') < Date.now() - timeStart) {
-        console.log("Record no superado");
-    } else if (localStorage.getItem('record') > Date.now() - timeStart) {
-        console.log("Record superado");
-        localStorage.setItem('record', Date.now() - timeStart);
+
+    const recordTime = localStorage.getItem('record_time');
+    const playerTime = Date.now() - timeStart;
+
+    if (recordTime) {
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime);
+            pResult.innerHTML = '¡SUPERASTE EL RECORD! 🏆';
+        } else {
+            pResult.innerHTML = '¡NO SUPERASTE EL RECORD! 😭';
+        }
+    } else {
+        localStorage.setItem('record_time', playerTime);
+        pResult.innerHTML = '¡Para ser la primera vez, lo hiciste bien, pero sé que puedes hacerlo mejor 💪!';
     }
+
+    // 1º Propuesta, realizada por mi.
+    // if (!localStorage.getItem('record')) {
+    //     localStorage.setItem('record', Date.now() - timeStart);
+    // } else if (localStorage.getItem('record') < Date.now() - timeStart) {
+    //     console.log("Record no superado");
+    // } else if (localStorage.getItem('record') > Date.now() - timeStart) {
+    //     console.log("Record superado");
+    //     localStorage.setItem('record', Date.now() - timeStart);
+    // }
 }
 
 function showLives() {
@@ -214,6 +235,16 @@ function showLives() {
 
 function showTime() {
     spanTime.innerHTML = Date.now() - timeStart;
+}
+
+function showRecord() {
+    const recordTime = localStorage.getItem('record_time');
+
+    if (recordTime) {
+        spanRecord.innerHTML = recordTime;
+    } else {
+        spanRecord.innerHTML = '¡No hay record actual!';
+    }
 }
 
 // 1º Forma de la que se hizo.
