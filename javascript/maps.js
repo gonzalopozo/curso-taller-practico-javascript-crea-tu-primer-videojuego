@@ -2,17 +2,16 @@
  * Reglas:
  * El final de cada nivel debe ser el inicio del siguiente
 */
-
 const emojis = {
     '-': ' ',
-    'O': '🚪',
-    'X': '💣',
-    'I': '🎁',
-    'PLAYER': '💀',
-    'BOMB_COLLISION': '🔥',
-    'GAME_OVER': '👎',
-    'WIN': '🏆',
-    'HEART': '♥️'
+    'O': '⛩️',
+    'X': '🥢',
+    'I': '🏯',
+    'PLAYER': '🐉',
+    'OBSTACLE_COLLISION': '🍜',
+    'GAME_OVER': '👹',
+    'WIN': '🏮',
+    'HEART': '🩶'
 };
 
 const maps = [];
@@ -41,7 +40,7 @@ maps.push(`
     XX--XXX-XX
     XXXX---IXX
     XXXXXXXXXX
-    `);
+`);
 
 maps.push(`
     I-----XXXX

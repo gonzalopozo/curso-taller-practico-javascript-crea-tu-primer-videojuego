@@ -8,6 +8,7 @@ const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
 const spanRecord = document.querySelector('#record');
 const pResult = document.querySelector('#result');
+const btnRestart = document.querySelector('.restart');
 
 let canvasSize;
 let elementsSize;
@@ -18,22 +19,19 @@ let timeStart;
 let timePlayer;
 let timeInterval;
 
-const playerPosition = {
-    x: undefined,
-    y: undefined
+class CanvasItem {
+    constructor(type, posX, posY) {
+        this.type = type;
+        this.posX = posX;
+        this.posY = posY;
+    }
 }
 
-const giftPosition = {
-    x: undefined,
-    y: undefined
-}
+const player = new CanvasItem('PLAYER', undefined, undefined);
 
-function Bomb(posX, posY) {
-    this.posX = posX;
-    this.posY = posY;
-}
+const castle = new CanvasItem('I', undefined, undefined);
 
-let bombsPositions = [];
+let obstaclePositions = [];
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -53,8 +51,8 @@ function setCanvasSize() {
 
     elementsSize = (canvasSize / 10) - 1;
 
-    playerPosition.x = undefined;
-    playerPosition.y = undefined;
+    player.posX = undefined;
+    player.posY = undefined;
 
     startGame();
 }
@@ -86,8 +84,8 @@ function startGame() {
     showLives();
 
     // Hemos cambiado el tipo de variable 'const' a 'let', pero usando el siguiente código se podria limpiar el array manteniendo la variable como 'const':
-    // bombsPositions.splice(0, bombsPositions.length);
-    bombsPositions = [];
+    // obstaclePositions.splice(0, obstaclePositions.length);
+    obstaclePositions = [];
     game.clearRect(0, 0, canvasSize, canvasSize);
     
     mapRowsCols.forEach((row, rowI) => {
@@ -98,24 +96,24 @@ function startGame() {
 
             if (col == 'O') {
 
-                if (!playerPosition.x && !playerPosition.y) {
-                    playerPosition.x = posX;
-                    playerPosition.y = posY;
+                if (!player.posX && !player.posY) {
+                    player.posX = posX;
+                    player.posY = posY;
 
-                    console.log({playerPosition});
+                    console.log({player});
                 }
                 
             } else if (col == 'I') {
 
-                giftPosition.x = posX;
-                giftPosition.y = posY;
+                castle.posX = posX;
+                castle.posY = posY;
 
             } else if (col == 'X') {
 
-                bombsPositions.push(new Bomb(posX, posY));
+                obstaclePositions.push(new CanvasItem('OBSTACLE', posX, posY));
 
                 // El profesor, lo hace de forma que no crea un constructor de bomba, unicamente le hace push de un objeto con los atributos "x" e "y".
-                // bombsPositions.push({
+                // obstaclePositions.push({
                 //     x: posX,
                 //     y: posY
                 // })
@@ -132,10 +130,10 @@ function startGame() {
 
 function movePlayer() {
     // 1º Forma de la que se hizo.
-    // const realPlayerPosX = Math.floor(playerPosition.x);
-    // const realPlayerPosY = Math.floor(playerPosition.y);
-    // const realGiftPosX = Math.floor(giftPosition.x);
-    // const realGiftPosY = Math.floor(giftPosition.y);
+    // const realPlayerPosX = Math.floor(player.posX);
+    // const realPlayerPosY = Math.floor(player.posY);
+    // const realGiftPosX = Math.floor(castle.posX);
+    // const realGiftPosY = Math.floor(castle.posY);
 
 
     // if ((realPlayerPosX === realGiftPosX) && (realPlayerPosY === realGiftPosY)) {
@@ -143,33 +141,35 @@ function movePlayer() {
     // }
 
     // 2º Forma de la que se hizo, en teoria más optima.
-    const giftCollisionX = Math.floor(playerPosition.x) === Math.floor(giftPosition.x);
-    const giftCollisionY = Math.floor(playerPosition.y) === Math.floor(giftPosition.y);
-    const giftCollision = giftCollisionX && giftCollisionY;
+    const castleCollisionX = Math.floor(player.posX) === Math.floor(castle.posX);
+    const castleCollisionY = Math.floor(player.posY) === Math.floor(castle.posY);
+    const castleCollision = castleCollisionX && castleCollisionY;
 
     // En primera instancia yo hice una función que devolvia true o false, dependiendo si el jugador se encontraba sobre una bomba.
-    // const collisionWithBomb = playerCollisionWithBomb(playerPosition.x, playerPosition.y);
+    // const collisionWithBomb = playerCollisionWithBomb(player.posX, player.posY);
 
-    if (giftCollision) {
+    if (castleCollision) {
         levelWin();
     } /* else if (collisionWithBomb) {
         console.log("WUEON, BOMBA CABRON");
     } */
 
-    const collisionWithBomb = bombsPositions.find(bomb => {
-        const bombCollisionX = Math.floor(bomb.posX) == Math.floor(playerPosition.x);
-        const bombCollisionY = Math.floor(bomb.posY) == Math.floor(playerPosition.y);
+    // TODO: turn obstacles into the obstacle_collision emoji
 
-        return bombCollisionX && bombCollisionY;
+    const collisionWithObstacle = obstaclePositions.find(obstacle => {
+        const obstacleCollisionX = Math.floor(obstacle.posX) == Math.floor(player.posX);
+        const obstacleCollisionY = Math.floor(obstacle.posY) == Math.floor(player.posY);
+
+        return obstacleCollisionX && obstacleCollisionY;
     })
 
-    console.log({collisionWithBomb});
+    console.log({collisionWithObstacle});
 
-    if (collisionWithBomb) {
+    if (collisionWithObstacle) {
         levelFail();
     }
 
-    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+    game.fillText(emojis[player.type], player.posX, player.posY);
 }
 
 function levelWin() {
@@ -179,7 +179,7 @@ function levelWin() {
 }
 
 function levelFail() {
-    console.log('Chocaste con bomba');
+    console.log('Chocaste con un obstaculo');
 
     lives--;
 
@@ -192,8 +192,8 @@ function levelFail() {
 
     }
 
-    playerPosition.x = undefined;
-    playerPosition.y = undefined;
+    player.posX = undefined;
+    player.posY = undefined;
     
     startGame();
 
@@ -289,16 +289,16 @@ btnDown.addEventListener('click', moveDown);
 
 function moveUp() {
     console.log("¡Me quiero mover hacia arriba!");
-    if ((playerPosition.y - elementsSize) > 0) {
-        playerPosition.y -= elementsSize;
+    if ((player.posY - elementsSize) > 0) {
+        player.posY -= elementsSize;
         startGame();
     }
 }
 
 function moveLeft() {
     console.log("¡Me quiero mover hacia la izquierda!");
-    if ((playerPosition.x - elementsSize) > elementsSize) {
-        playerPosition.x -= elementsSize;
+    if ((player.posX - elementsSize) > elementsSize) {
+        player.posX -= elementsSize;
         startGame();
     }
 
@@ -306,22 +306,38 @@ function moveLeft() {
 
 function moveRight() {
     console.log("¡Me quiero mover hacia la derecha!");
-    if ((playerPosition.x + elementsSize) <= (elementsSize * (9 + 1.25))) {
-        playerPosition.x += elementsSize;
+    if ((player.posX + elementsSize) <= (elementsSize * (9 + 1.25))) {
+        player.posX += elementsSize;
         startGame();
     }
 }
 
 function moveDown() {
     console.log("¡Me quiero mover hacia abajo!");
-    if ((playerPosition.y + elementsSize) <= canvasSize) {
-        playerPosition.y += elementsSize;
+    if ((player.posY + elementsSize) <= canvasSize) {
+        player.posY += elementsSize;
         startGame();
     }
 }
 
+btnRestart.addEventListener('click', restartGame);
+
+function restartGame() {
+    level = 0;
+    lives = 3;
+    timeStart = undefined;
+    clearInterval(timeInterval);
+
+    pResult.innerHTML = '';
+
+    player.posX = undefined;
+    player.posY = undefined;
+    
+    startGame();
+}
+
 // Función que devovlia true si el jugador se encotraba sobre una bomba.
-// function playerCollisionWithBomb(playerPosX, playerPosY) {
+// function playerCollisionWithObstacle(playerPosX, playerPosY) {
 //     let collision = false;
 // 
 //     bombsPositions.forEach(element => {
