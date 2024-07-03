@@ -27,11 +27,22 @@ class CanvasItem {
     }
 }
 
+class Obstacle extends CanvasItem {
+    constructor(posX, posY) {
+        super('X', posX, posY);
+    }
+
+    collisihed() {
+        this.type = 'OBSTACLE_COLLISION';
+    }
+}
+
 const player = new CanvasItem('PLAYER', undefined, undefined);
 
 const castle = new CanvasItem('I', undefined, undefined);
 
 let obstaclePositions = [];
+let collisihedObstacles = [];
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -90,7 +101,7 @@ function startGame() {
     
     mapRowsCols.forEach((row, rowI) => {
         row.forEach((col, colI) => {
-            const emoji = emojis[col];
+            let emoji = emojis[col];
             const posX = elementsSize * (colI + 1.25);
             const posY = elementsSize * (rowI + 0.95);
 
@@ -110,7 +121,7 @@ function startGame() {
 
             } else if (col == 'X') {
 
-                obstaclePositions.push(new CanvasItem('OBSTACLE', posX, posY));
+                obstaclePositions.push(new Obstacle(posX, posY));
 
                 // El profesor, lo hace de forma que no crea un constructor de bomba, unicamente le hace push de un objeto con los atributos "x" e "y".
                 // obstaclePositions.push({
@@ -119,6 +130,18 @@ function startGame() {
                 // })
 
             }
+
+            collisihedObstacles.forEach(collishedObs => {
+                const collishedObsX = Math.floor(collishedObs.posX) == Math.floor(posX);
+                const collishedObsY = Math.floor(collishedObs.posY) == Math.floor(posY);
+                const collishedObsPos = collishedObsX && collishedObsY;
+
+                if (collishedObsPos) {
+                    emoji = emojis['OBSTACLE_COLLISION'];
+                }
+            });
+
+            console.log(`Número de fila es ${rowI} y el número de columna es ${colI}`);
 
             game.fillText(emoji, posX, posY);
 
@@ -160,6 +183,14 @@ function movePlayer() {
         const obstacleCollisionX = Math.floor(obstacle.posX) == Math.floor(player.posX);
         const obstacleCollisionY = Math.floor(obstacle.posY) == Math.floor(player.posY);
 
+        if (obstacleCollisionX && obstacleCollisionY) {
+            const collishedObstacle = new Obstacle(obstacle.posX, obstacle.posY);
+            
+            collishedObstacle.collisihed();
+            
+            collisihedObstacles.push(collishedObstacle);
+        }
+
         return obstacleCollisionX && obstacleCollisionY;
     })
 
@@ -175,6 +206,7 @@ function movePlayer() {
 function levelWin() {
     console.log('Subiste de nivel');
     level++;
+    collisihedObstacles = [];
     startGame();
 }
 
@@ -189,6 +221,8 @@ function levelFail() {
         lives = 3;
         timeStart = undefined;
         clearInterval(timeInterval);
+
+        collisihedObstacles = [];
 
     }
 
@@ -240,14 +274,14 @@ function showLives() {
 }
 
 function showTime() {
-    spanTime.innerHTML = Date.now() - timeStart;
+    spanTime.innerHTML = formatedTime(Date.now() - timeStart);
 }
 
 function showRecord() {
     const recordTime = localStorage.getItem('record_time');
 
     if (recordTime) {
-        spanRecord.innerHTML = recordTime;
+        spanRecord.innerHTML = formatedTime(recordTime);
     } else {
         spanRecord.innerHTML = '¡No hay record actual!';
     }
@@ -334,6 +368,32 @@ function restartGame() {
     player.posY = undefined;
     
     startGame();
+}
+
+function formatedTime(time) {
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+
+    seconds = Math.floor(time / 1000);
+
+    if (seconds / 60 >= 1) {
+        minutes = Math.floor(seconds / 60);
+    } else {
+        minutes = 0;
+    }
+
+    if (minutes / 60 >= 1) {
+        hours = Math.floor(minutes / 60);
+    } else {
+        hours = 0;
+    }
+    
+
+    let formated = `${hours}h : ${minutes}min : ${seconds}s`;
+
+    return formated;
+
 }
 
 // Función que devovlia true si el jugador se encotraba sobre una bomba.
