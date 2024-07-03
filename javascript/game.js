@@ -371,23 +371,27 @@ function restartGame() {
 }
 
 function formatedTime(time) {
-    let seconds = 0;
-    let minutes = 0;
-    let hours = 0;
+    let initialTimeInSeconds = time / 1000;
+    let seconds;
+    let minutes;
+    let hours;
 
-    seconds = Math.floor(time / 1000);
+    // seconds = Math.floor(time / 1000);
 
-    if (seconds / 60 >= 1) {
-        minutes = Math.floor(seconds / 60);
-    } else {
-        minutes = 0;
-    }
+    hours = Math.trunc(initialTimeInSeconds / 3600);
 
-    if (minutes / 60 >= 1) {
-        hours = Math.floor(minutes / 60);
-    } else {
-        hours = 0;
-    }
+    minutes = Math.trunc((initialTimeInSeconds % 3600) / 60);
+
+    seconds = Math.trunc((initialTimeInSeconds % 3600) % 60);
+
+    // minutes = Math.floor((seconds % 3600) / 60);
+    
+
+    // if (minutes / 60 >= 1) {
+    //     hours = Math.floor(minutes / 60);
+    // } else {
+    //     hours = 0;
+    // }
     
 
     let formated = `${hours}h : ${minutes}min : ${seconds}s`;
