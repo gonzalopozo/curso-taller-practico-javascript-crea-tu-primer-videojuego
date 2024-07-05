@@ -9,6 +9,13 @@ const spanTime = document.querySelector('#time');
 const spanRecord = document.querySelector('#record');
 const pResult = document.querySelector('#result');
 const btnRestart = document.querySelector('.restart');
+const modal = document.querySelector('.modal');
+const closeBtnModal = document.querySelector('#close');
+const gameContainer = document.querySelector('.game-container');
+const countries = document.querySelectorAll('#flags-container > button')
+// const btnUk = document.querySelector('#uk-button');
+// const btnEs = document.querySelector('#es-button');
+
 
 let canvasSize;
 let elementsSize;
@@ -44,8 +51,46 @@ const castle = new CanvasItem('I', undefined, undefined);
 let obstaclePositions = [];
 let collisihedObstacles = [];
 
+window.addEventListener('load', openModal);
+window.addEventListener('load', addEventsListenerToEachCoutry);
 window.addEventListener('load', setCanvasSize);
+
+closeBtnModal.addEventListener('click', closeModal);
 window.addEventListener('resize', setCanvasSize);
+
+function openModal() {
+    const lang = localStorage.getItem('lang');
+
+    if (!lang) {
+        modal.style.display = 'block';
+        gameContainer.style.display = 'none';
+        closeBtnModal.style.display = 'none';
+    } else {
+        return;
+    }
+}
+
+function selectLang(lang) {
+    if (lang === 'en' || lang === 'es') {
+        localStorage.setItem('lang', lang);
+        console.log('lenguaje seleccionado');
+    } else {
+        console.error('AAAAAAAAA');
+    }
+}
+
+function addEventsListenerToEachCoutry() {
+    countries.forEach(button => {
+        button.addEventListener('click', () => selectLang(button.value));
+        button.addEventListener('click', () => selectLang(button.value));
+    });
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+    gameContainer.style.display = 'flex';
+}
+
 
 function setCanvasSize() {
     if (window.innerHeight > window.innerWidth) {
@@ -140,8 +185,6 @@ function startGame() {
                     emoji = emojis['OBSTACLE_COLLISION'];
                 }
             });
-
-            console.log(`Número de fila es ${rowI} y el número de columna es ${colI}`);
 
             game.fillText(emoji, posX, posY);
 
@@ -246,6 +289,7 @@ function gameWin() {
             pResult.innerHTML = '¡SUPERASTE EL RECORD! 🏆';
         } else {
             pResult.innerHTML = '¡NO SUPERASTE EL RECORD! 😭';
+            console.log({recordTime, playerTime});
         }
     } else {
         localStorage.setItem('record_time', playerTime);
@@ -382,7 +426,7 @@ function formatedTime(time) {
 
     minutes = Math.trunc((initialTimeInSeconds % 3600) / 60);
 
-    seconds = Math.trunc((initialTimeInSeconds % 3600) % 60);
+    seconds = (initialTimeInSeconds % 3600) % 60;
 
     // minutes = Math.floor((seconds % 3600) / 60);
     
@@ -394,7 +438,7 @@ function formatedTime(time) {
     // }
     
 
-    let formated = `${hours}h : ${minutes}min : ${seconds}s`;
+    let formated = `${hours}h : ${minutes}min : ${seconds.toFixed(2)}s`;
 
     return formated;
 
