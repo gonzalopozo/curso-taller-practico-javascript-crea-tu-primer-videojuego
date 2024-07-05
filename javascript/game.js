@@ -12,10 +12,10 @@ const btnRestart = document.querySelector('.restart');
 const modal = document.querySelector('.modal');
 const closeBtnModal = document.querySelector('#close');
 const gameContainer = document.querySelector('.game-container');
-const countries = document.querySelectorAll('#flags-container > button')
-// const btnUk = document.querySelector('#uk-button');
-// const btnEs = document.querySelector('#es-button');
-
+const countries = document.querySelectorAll('#flags-container > button');
+const titleModal = document.querySelector('.modal > h1');
+const countriesContainer = document.querySelector('#flags-container');
+const paragraphModal = document.querySelector('.modal > p');
 
 let canvasSize;
 let elementsSize;
@@ -48,11 +48,13 @@ const player = new CanvasItem('PLAYER', undefined, undefined);
 
 const castle = new CanvasItem('I', undefined, undefined);
 
+const door = new CanvasItem('O', undefined, undefined);
+
 let obstaclePositions = [];
 let collisihedObstacles = [];
 
 window.addEventListener('load', openModal);
-window.addEventListener('load', addEventsListenerToEachCoutry);
+window.addEventListener('load', addEventsListenerToEachCountry);
 window.addEventListener('load', setCanvasSize);
 
 closeBtnModal.addEventListener('click', closeModal);
@@ -79,11 +81,27 @@ function selectLang(lang) {
     }
 }
 
-function addEventsListenerToEachCoutry() {
+function addEventsListenerToEachCountry() {
     countries.forEach(button => {
         button.addEventListener('click', () => selectLang(button.value));
-        button.addEventListener('click', () => selectLang(button.value));
+        button.addEventListener('click', turnModalIntoHelpModal);
     });
+}
+
+function turnModalIntoHelpModal () {
+    const lang = localStorage.getItem('lang');
+
+    closeBtnModal.style.display = 'block';
+    countriesContainer.style.display = 'none';
+
+    if (lang === 'en') {
+        titleModal.innerHTML = `How to play Dragon's Gate Journey?`;
+        paragraphModal.innerHTML = `The company itself is a very successful company. He is held by the desire of life! For those who are present, but at other times pain is loved by flattery, but pleasure itself is mistaken for pleasure, and one flees from necessities.`;
+    } else if (lang === 'es') {
+        titleModal.innerHTML = `¿Como jugar a Dragon's Gate Journey?`;
+        paragraphModal.innerHTML = `La empresa en sí es una empresa muy exitosa. ¡Está retenido por el deseo de vivir! Para los que están presentes, pero en otras ocasiones se ama el dolor con halagos, pero el placer mismo se confunde con placer, y se huye de las necesidades.`;
+    }
+
 }
 
 function closeModal() {
@@ -151,6 +169,9 @@ function startGame() {
             const posY = elementsSize * (rowI + 0.95);
 
             if (col == 'O') {
+
+                door.posX = posX;
+                door.posY = posY;
 
                 if (!player.posX && !player.posY) {
                     player.posX = posX;
@@ -278,6 +299,14 @@ function levelFail() {
 
 function gameWin() {
     console.log('¡Ganaste cabron!');
+
+    removeArrowKeyListeners();
+
+    btnUp.removeEventListener('click', moveUp);
+    btnLeft.removeEventListener('click', moveLeft);
+    btnRight.removeEventListener('click', moveRight);
+    btnDown.removeEventListener('click', moveDown);
+
     clearInterval(timeInterval);
 
     const recordTime = localStorage.getItem('record_time');
@@ -295,6 +324,67 @@ function gameWin() {
         localStorage.setItem('record_time', playerTime);
         pResult.innerHTML = '¡Para ser la primera vez, lo hiciste bien, pero sé que puedes hacerlo mejor 💪!';
     }
+
+    const map = maps[level - 1  ];
+
+    console.log({map, level});
+
+    const mapRows = map.trim().split('\n');
+    const mapRowsCols = mapRows.map(row => row.trim().split(''));
+    game.clearRect(0, 0, canvasSize, canvasSize);
+
+    game.fillText(emojis[door.type], door.posX, door.posY);
+    game.fillText(emojis[castle.type], castle.posX, castle.posY);
+
+    let delay = 0;
+
+
+    mapRowsCols.forEach((row, rowI) => {
+        row.forEach((col, colI) =>  {
+            // let emoji = emojis[col];
+            // const posX = elementsSize * (colI + 1.25);
+            // const posY = elementsSize * (rowI + 0.95);
+
+            // if (col == 'O') {
+
+            //     if (!player.posX && !player.posY) {
+            //         player.posX = posX;
+            //         player.posY = posY;
+
+            //         console.log({player});
+            //     }
+                
+            // } else if (col == 'I') {
+
+            //     castle.posX = posX;
+            //     castle.posY = posY;
+
+            // } else if (col == 'X') {
+
+            //     emoji = emojis['WIN'];
+
+            // }
+
+            // game.fillText(emoji, posX, posY);
+
+            setTimeout(() => {
+                let emoji = emojis[col];
+                const posX = elementsSize * (colI + 1.25);
+                const posY = elementsSize * (rowI + 0.95);
+    
+                if (col === 'X') {
+                    emoji = emojis['WIN'];
+                    game.fillText(emoji, posX, posY);
+                }
+    
+                
+            }, delay);
+    
+            delay += 150;
+
+        })
+    });
+
 
     // 1º Propuesta, realizada por mi.
     // if (!localStorage.getItem('record')) {
@@ -343,7 +433,25 @@ function showRecord() {
 // }
 
 // 2º Forma y más optima
-window.addEventListener('keydown', (e) => {
+// window.addEventListener('keydown', (e) => {
+//     const tecla = e.key;
+
+//     const moveFunctions = {
+//         ArrowUp: moveUp,
+//         ArrowLeft: moveLeft,
+//         ArrowRight: moveRight,
+//         ArrowDown: moveDown
+//     }
+
+//     const moveFunction = moveFunctions[tecla];
+
+//     if (moveFunction) {
+//         moveFunction();
+//     }
+// });
+
+// 3º Forma y definitiva, parecida a la versión anterior, pero que nos permite borrar los eventListener.
+const handleKeyDown = (e) => {
     const tecla = e.key;
 
     const moveFunctions = {
@@ -351,14 +459,23 @@ window.addEventListener('keydown', (e) => {
         ArrowLeft: moveLeft,
         ArrowRight: moveRight,
         ArrowDown: moveDown
-    }
+    };
 
     const moveFunction = moveFunctions[tecla];
 
     if (moveFunction) {
         moveFunction();
     }
-});
+};
+
+window.addEventListener('keydown', handleKeyDown);
+
+const removeArrowKeyListeners = () => {
+    window.removeEventListener('keydown', handleKeyDown);
+};
+
+// Now you can call removeArrowKeyListeners() to remove the event listener
+
 
 btnUp.addEventListener('click', moveUp);
 btnLeft.addEventListener('click', moveLeft);

@@ -1,7 +1,9 @@
 body {
     background-color: #071952;
     color: #000000;  
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
@@ -34,7 +36,7 @@ canvas {
     border-radius: 8px;
     border-color: #37B7C3;
     border-style: solid;
-    font-family: inherit;
+    /* font-family: inherit; */
     margin: 0;
     padding: 5px 20px;
     width: 100px;
@@ -53,7 +55,7 @@ canvas {
     color: #EBF4F6;
     cursor: pointer;
     display: inline-block;
-    font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+    /* font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif; */
     padding: 7px 20px;
     text-align: center;
     text-decoration: none;
@@ -82,7 +84,7 @@ canvas {
     left: 50%;
     top: 50%;
     border-radius: 8px;
-    font-family: sans-serif;
+    /* font-family: sans-serif; */
     display: none;
 }
 
