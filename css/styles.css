@@ -122,9 +122,37 @@ canvas {
 .messages {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 auto;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10px auto 0 auto;
     width: 80%;
     max-width: 460px;
+}
+
+.messages .internal-container {
+    width: 55%;
+}
+
+.messages button {
+    border-style: none;
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+    background: url('../assets/icons/help.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.messages button:hover {
+    background: url('../assets/icons/help_hover.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.messages button img {
+    height: 60px;
 }
 
 p {

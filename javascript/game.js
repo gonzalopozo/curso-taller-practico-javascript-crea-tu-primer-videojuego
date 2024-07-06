@@ -16,6 +16,7 @@ const countries = document.querySelectorAll('#flags-container > button');
 const titleModal = document.querySelector('.modal > h1');
 const countriesContainer = document.querySelector('#flags-container');
 const paragraphModal = document.querySelector('.modal > p');
+const btnHelp = document.querySelector('.messages button');
 
 let canvasSize;
 let elementsSize;
@@ -56,9 +57,10 @@ let collisihedObstacles = [];
 window.addEventListener('load', openModal);
 window.addEventListener('load', addEventsListenerToEachCountry);
 window.addEventListener('load', setCanvasSize);
-
 closeBtnModal.addEventListener('click', closeModal);
 window.addEventListener('resize', setCanvasSize);
+btnHelp.addEventListener('click', showHelpModal);
+
 
 function openModal() {
     const lang = localStorage.getItem('lang');
@@ -73,7 +75,7 @@ function openModal() {
 }
 
 function selectLang(lang) {
-    if (lang === 'en' || lang === 'es') {
+    if (lang === 'uk' || lang === 'es') {
         localStorage.setItem('lang', lang);
         console.log('lenguaje seleccionado');
     } else {
@@ -94,12 +96,31 @@ function turnModalIntoHelpModal () {
     closeBtnModal.style.display = 'block';
     countriesContainer.style.display = 'none';
 
-    if (lang === 'en') {
+    if (lang === 'uk') {
         titleModal.innerHTML = `How to play Dragon's Gate Journey?`;
-        paragraphModal.innerHTML = `The company itself is a very successful company. He is held by the desire of life! For those who are present, but at other times pain is loved by flattery, but pleasure itself is mistaken for pleasure, and one flees from necessities.`;
+        paragraphModal.innerHTML = `<b>Dragon's Gate Journey</b> is an exciting adventure game where you control a <b>dragon</b> 🐉. The goal is to guide the dragon from the <b>torii gate</b> ⛩️ to the <b>Japanese castle</b> 🏯, dodging the <b>chopsticks</b> 🥢 which, if hit, will turn into <b>bowls of ramen</b> 🍜. <br><br> If you manage to complete all levels, you will reach the <b>lantern walk</b> 🏮, celebrating your victory. However, if you lose all your lives (three hearts 🩶), the <b>oni demon</b> 👹 will appear, indicating your defeat.
+        
+        <br><br>
+
+        <b>Controls:</b>
+
+        <ul>
+            <li><b>On a computer or device with a keyboard:</b> you can move using the arrow keys or on-screen buttons.</li>
+            <li><b>On a mobile device:</b> you can only move using the on-screen buttons.</li>
+        </ul>
+        `;
     } else if (lang === 'es') {
         titleModal.innerHTML = `¿Como jugar a Dragon's Gate Journey?`;
-        paragraphModal.innerHTML = `La empresa en sí es una empresa muy exitosa. ¡Está retenido por el deseo de vivir! Para los que están presentes, pero en otras ocasiones se ama el dolor con halagos, pero el placer mismo se confunde con placer, y se huye de las necesidades.`;
+        paragraphModal.innerHTML = `<b>Dragon's Gate Journey</b> es un emocionante juego de aventura en el que controlas a un <b>dragón</b> 🐉. El objetivo es guiar al dragón desde la <b>puerta torii</b> ⛩️ hasta el <b>castillo japonés</b> 🏯, esquivando los <b>palillos</b> 🥢 que, si los chocas, se convertirán en <b>tazones de ramen</b> 🍜. <br><br> Si logras completar todos los niveles, llegarás al <b>paseo de las linternas</b> 🏮, celebrando tu victoria. Sin embargo, si pierdes todas tus vidas (tres corazones 🩶), aparecerá el <b>demonio oni</b> 👹, indicando tu derrota.
+        
+        <br><br>
+
+        <b>Controles:</b>
+        
+        <ul>
+            <li><b>En ordenador o dispositivo con teclado:</b> puedes moverte usando las teclas de las flechas o con los botones en pantalla.</li>
+            <li><b>En dispositivo móvil:</b> solo podrás moverte usando los botones en pantalla.</li>
+        </ul>`;
     }
 
 }
@@ -107,6 +128,19 @@ function turnModalIntoHelpModal () {
 function closeModal() {
     modal.style.display = 'none';
     gameContainer.style.display = 'flex';
+}
+
+function showHelpModal() {
+    turnModalIntoHelpModal();
+
+    const lang = localStorage.getItem('lang');
+
+    if (lang) {
+        modal.style.display = 'block';
+        gameContainer.style.display = 'none';
+    } else {
+        return;
+    }
 }
 
 
