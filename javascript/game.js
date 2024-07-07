@@ -105,7 +105,7 @@ function turnModalIntoHelpModal () {
         <b>Controls:</b>
 
         <ul>
-            <li><b>On a computer or device with a keyboard:</b> you can move using the arrow keys or on-screen buttons.</li>
+            <li><b>On a computer or device with a keyboard:</b> you can move using the WASD keys, the arrow keys or on-screen buttons.</li>
             <li><b>On a mobile device:</b> you can only move using the on-screen buttons.</li>
         </ul>
         `;
@@ -118,7 +118,7 @@ function turnModalIntoHelpModal () {
         <b>Controles:</b>
         
         <ul>
-            <li><b>En ordenador o dispositivo con teclado:</b> puedes moverte usando las teclas de las flechas o con los botones en pantalla.</li>
+            <li><b>En ordenador o dispositivo con teclado:</b> puedes moverte usando las teclas WASD, las flechas o con los botones en pantalla.</li>
             <li><b>En dispositivo móvil:</b> solo podrás moverte usando los botones en pantalla.</li>
         </ul>`;
     }
@@ -146,9 +146,9 @@ function showHelpModal() {
 
 function setCanvasSize() {
     if (window.innerHeight > window.innerWidth) {
-        canvasSize = window.innerWidth * 0.8;
+        canvasSize = window.innerWidth * 0.7;
     } else {
-        canvasSize = window.innerHeight * 0.8;
+        canvasSize = window.innerHeight * 0.7;
     }
 
     // canvasSize = Math.floor(canvasSize);
@@ -315,14 +315,44 @@ function levelFail() {
 
     if (lives <= 0) {
         
-        level = 0;
-        lives = 3;
         timeStart = undefined;
         clearInterval(timeInterval);
+
+        game.fillText(emojis[door.type], door.posX, door.posY);
+        game.fillText(emojis[castle.type], castle.posX, castle.posY);
+
+        removeArrowKeyListeners();
+
+        btnUp.removeEventListener('click', moveUp);
+        btnLeft.removeEventListener('click', moveLeft);
+        btnRight.removeEventListener('click', moveRight);
+        btnDown.removeEventListener('click', moveDown);
+
+        let delay = 0;
+
+        obstaclePositions.forEach(obstacle => {
+            setTimeout(() => {
+                game.fillText(emojis['GAME_OVER'], obstacle.posX, obstacle.posY)
+            }, delay);
+
+            delay += 500;
+        });
+
+        
+
+        level = 0;
+        lives = 3;
 
         collisihedObstacles = [];
 
     }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    btnUp.addEventListener('click', moveUp);
+    btnLeft.addEventListener('click', moveLeft);
+    btnRight.addEventListener('click', moveRight);
+    btnDown.addEventListener('click', moveDown);
 
     player.posX = undefined;
     player.posY = undefined;
@@ -363,8 +393,8 @@ function gameWin() {
 
     console.log({map, level});
 
-    const mapRows = map.trim().split('\n');
-    const mapRowsCols = mapRows.map(row => row.trim().split(''));
+    // const mapRows = map.trim().split('\n');
+    // const mapRowsCols = mapRows.map(row => row.trim().split(''));
     game.clearRect(0, 0, canvasSize, canvasSize);
 
     game.fillText(emojis[door.type], door.posX, door.posY);
@@ -372,52 +402,34 @@ function gameWin() {
 
     let delay = 0;
 
+    obstaclePositions.forEach(obstacle => {
+        setTimeout(() => {
+            game.fillText(emojis['WIN'], obstacle.posX, obstacle.posY)
+        }, delay);
 
-    mapRowsCols.forEach((row, rowI) => {
-        row.forEach((col, colI) =>  {
-            // let emoji = emojis[col];
-            // const posX = elementsSize * (colI + 1.25);
-            // const posY = elementsSize * (rowI + 0.95);
-
-            // if (col == 'O') {
-
-            //     if (!player.posX && !player.posY) {
-            //         player.posX = posX;
-            //         player.posY = posY;
-
-            //         console.log({player});
-            //     }
-                
-            // } else if (col == 'I') {
-
-            //     castle.posX = posX;
-            //     castle.posY = posY;
-
-            // } else if (col == 'X') {
-
-            //     emoji = emojis['WIN'];
-
-            // }
-
-            // game.fillText(emoji, posX, posY);
-
-            setTimeout(() => {
-                let emoji = emojis[col];
-                const posX = elementsSize * (colI + 1.25);
-                const posY = elementsSize * (rowI + 0.95);
-    
-                if (col === 'X') {
-                    emoji = emojis['WIN'];
-                    game.fillText(emoji, posX, posY);
-                }
-    
-                
-            }, delay);
-    
-            delay += 150;
-
-        })
+        delay += 25;
     });
+
+
+    // mapRowsCols.forEach((row, rowI) => {
+    //     row.forEach((col, colI) =>  {
+    //         setTimeout(() => {
+    //             let emoji = emojis[col];
+    //             const posX = elementsSize * (colI + 1.25);
+    //             const posY = elementsSize * (rowI + 0.95);
+    
+    //             if (col === 'X') {
+    //                 emoji = emojis['WIN'];
+    //                 game.fillText(emoji, posX, posY);
+    //             }
+    
+                
+    //         }, delay);
+    
+    //         delay += 150;
+
+    //     })
+    // });
 
 
     // 1º Propuesta, realizada por mi.
@@ -492,7 +504,12 @@ const handleKeyDown = (e) => {
         ArrowUp: moveUp,
         ArrowLeft: moveLeft,
         ArrowRight: moveRight,
-        ArrowDown: moveDown
+        ArrowDown: moveDown,
+        w: moveUp,
+        a: moveLeft,
+        d: moveRight,
+        s: moveDown,
+        
     };
 
     const moveFunction = moveFunctions[tecla];

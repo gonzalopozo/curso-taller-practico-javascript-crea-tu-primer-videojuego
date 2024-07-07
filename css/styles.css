@@ -1,11 +1,30 @@
+@font-face {
+    font-family: kashimaBrush;
+    src: url('../assets/font/kashima_brush.otf');
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: #071952;
     color: #000000;  
     /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
     font-family: "Poppins", sans-serif;
-    box-sizing: border-box;
+    /* box-sizing: border-box;
     margin: 0;
-    padding: 0;
+    padding: 0; */
+}
+
+header h1 {
+    text-align: center;
+    color: #EBF4F6;
+    font-family: kashimaBrush;
+    margin: 20px 0 0 0;
+    font-size: 3.3rem;
 }
 
 .game-container {
@@ -14,7 +33,7 @@ body {
     flex-wrap: wrap;
     height: 100vh;
     align-items: center;
-    width: 100vw;
+    width: 100%;
 }
 
 canvas {
@@ -97,7 +116,7 @@ canvas {
     margin: 0 0 20px auto;
     background-color: transparent;
     font-size: 30px;
-    color: #c5c5c5;
+    color: #EBF4F6;
     border: none;
     outline: none;
     cursor: pointer;
