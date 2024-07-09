@@ -17,6 +17,7 @@ const titleModal = document.querySelector('.modal > h1');
 const countriesContainer = document.querySelector('#flags-container');
 const paragraphModal = document.querySelector('.modal > p');
 const btnHelp = document.querySelector('.messages button');
+const header = document.querySelector('header');
 
 let canvasSize;
 let elementsSize;
@@ -128,6 +129,7 @@ function turnModalIntoHelpModal () {
 function closeModal() {
     modal.style.display = 'none';
     gameContainer.style.display = 'flex';
+    header.style.display = 'block';
 }
 
 function showHelpModal() {
@@ -138,6 +140,7 @@ function showHelpModal() {
     if (lang) {
         modal.style.display = 'block';
         gameContainer.style.display = 'none';
+        header.style.display = 'none';
     } else {
         return;
     }
@@ -329,35 +332,33 @@ function levelFail() {
         btnDown.removeEventListener('click', moveDown);
 
         let delay = 0;
+        // let counter = 0;
 
         obstaclePositions.forEach(obstacle => {
             setTimeout(() => {
-                game.fillText(emojis['GAME_OVER'], obstacle.posX, obstacle.posY)
+                game.font = `${elementsSize}px Verdana`;
+                game.textAlign = "end";
+                game.fillText(emojis['GAME_OVER'], obstacle.posX, obstacle.posY);
+
+                if (delay >= (obstaclePositions.length - 1) * 10) {
+                    printResult('lost');
+                }
+
+                // counter++;
+                // console.log({delay, counter});
             }, delay);
 
-            delay += 500;
+            delay += 10;
         });
 
+        // console.log('Llamando a printResult');
+        // printResult('lost');
+    } else { 
+        player.posX = undefined;
+        player.posY = undefined;
         
-
-        level = 0;
-        lives = 3;
-
-        collisihedObstacles = [];
-
+        startGame();
     }
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    btnUp.addEventListener('click', moveUp);
-    btnLeft.addEventListener('click', moveLeft);
-    btnRight.addEventListener('click', moveRight);
-    btnDown.addEventListener('click', moveDown);
-
-    player.posX = undefined;
-    player.posY = undefined;
-    
-    startGame();
 
 }
 
@@ -404,11 +405,19 @@ function gameWin() {
 
     obstaclePositions.forEach(obstacle => {
         setTimeout(() => {
-            game.fillText(emojis['WIN'], obstacle.posX, obstacle.posY)
+            game.font = `${elementsSize}px Verdana`;
+            game.textAlign = "end";
+            game.fillText(emojis['WIN'], obstacle.posX, obstacle.posY);
+
+            if (delay >= (obstaclePositions.length - 1) * 10) {
+                printResult('win');
+            }
         }, delay);
 
         delay += 25;
     });
+
+    
 
 
     // mapRowsCols.forEach((row, rowI) => {
@@ -525,8 +534,6 @@ const removeArrowKeyListeners = () => {
     window.removeEventListener('keydown', handleKeyDown);
 };
 
-// Now you can call removeArrowKeyListeners() to remove the event listener
-
 
 btnUp.addEventListener('click', moveUp);
 btnLeft.addEventListener('click', moveLeft);
@@ -571,6 +578,9 @@ btnRestart.addEventListener('click', restartGame);
 function restartGame() {
     level = 0;
     lives = 3;
+
+    collisihedObstacles = [];
+
     timeStart = undefined;
     clearInterval(timeInterval);
 
@@ -579,6 +589,12 @@ function restartGame() {
     player.posX = undefined;
     player.posY = undefined;
     
+    window.addEventListener('keydown', handleKeyDown);
+    btnUp.addEventListener('click', moveUp);
+    btnLeft.addEventListener('click', moveLeft);
+    btnRight.addEventListener('click', moveRight);
+    btnDown.addEventListener('click', moveDown);
+
     startGame();
 }
 
@@ -632,3 +648,40 @@ function formatedTime(time) {
 // 
 //     return collision;
 // }
+
+function printResult(result) {
+    // Define base font sizes
+    const baseFontSizeLarge = 3.75; // base rem for large text
+    const baseFontSizeSmall = 22; // base px for small text (or you can use rem)
+
+    // Calculate responsive font sizes
+    const responsiveFontSizeLarge = (canvasSize / 500) * baseFontSizeLarge;
+    const responsiveFontSizeSmall = (canvasSize / 500) * baseFontSizeSmall;
+
+    if (result === 'lost') {
+        game.fillStyle = 'black';
+        game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
+
+        game.fillStyle = 'red';
+        game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+        game.textAlign = 'center';
+        game.fillText('¡GAME OVER!', canvasSize / 2, canvasSize / 2);
+        game.font = `${responsiveFontSizeSmall}px retroGaming`;
+        game.textAlign = 'center';
+        game.fillText('¡Pulsa el botón de restart', canvasSize / 2, canvasSize / 1.7);
+        game.fillText('para volver a jugar!', canvasSize / 2, canvasSize / 1.575);
+    } else if (result === 'win') {
+        game.fillStyle = 'black';
+        game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
+
+        game.fillStyle = '#D4AF37';
+        game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+        game.textAlign = 'center';
+        game.fillText('YOU WIN!', canvasSize / 2, canvasSize / 2);
+        game.font = `${responsiveFontSizeSmall - 4}px retroGaming`;
+        game.textAlign = 'center';
+        
+        game.fillText('¡Enhorabuena por tu victoria, pulsa el botón', canvasSize / 2, canvasSize / 1.7);
+        game.fillText('de restart para conseguir batir tu récord!', canvasSize / 2, canvasSize / 1.575);
+    }
+}

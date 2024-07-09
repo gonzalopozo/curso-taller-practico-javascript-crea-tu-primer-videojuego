@@ -3,6 +3,11 @@
     src: url('../assets/font/kashima_brush.otf');
 }
 
+@font-face {
+    font-family: retroGaming;
+    src: url('../assets/font/retro_gaming.ttf');
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,16 +17,12 @@
 body {
     background-color: #071952;
     color: #000000;  
-    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
     font-family: "Poppins", sans-serif;
-    /* box-sizing: border-box;
-    margin: 0;
-    padding: 0; */
 }
 
 header h1 {
     text-align: center;
-    color: #EBF4F6;
+    color: #ca0b4a;
     font-family: kashimaBrush;
     margin: 20px 0 0 0;
     font-size: 3.3rem;
@@ -51,15 +52,40 @@ canvas {
 }
 
 .btns > button {
-    background-color: #088395;
-    border-radius: 8px;
-    border-color: #37B7C3;
-    border-style: solid;
-    /* font-family: inherit; */
+    cursor: pointer;
+    border-style: none;
     margin: 0;
-    padding: 5px 20px;
-    width: 100px;
-    color: #EBF4F6;
+    width: 65px;
+    height: 65px;
+    user-select: none;
+}
+
+.btns > button#up  {
+    background: url('../assets/icons/arrow_up.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btns > button#left  {
+    background: url('../assets/icons/arrow_left.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btns > button#right  {
+    background: url('../assets/icons/arrow_right.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.btns > button#down  {
+    background: url('../assets/icons/arrow_down.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .btns > button:not(:last-child) {
@@ -68,13 +94,11 @@ canvas {
 
 .restart {
     margin-left: 30px;
-    background-color: #37B7C3;
     border-radius: 100px;
     box-shadow: rgba(8, 130, 149, 0.2) 0 -25px 18px -14px inset,rgba(8, 130, 149, 0.15) 0 1px 2px,rgba(8, 130, 149, 0.15) 0 2px 4px,rgba(8, 130, 149, 0.15) 0 4px 8px,rgba(8, 130, 149, 0.15) 0 8px 16px,rgba(8, 130, 149, 0.15) 0 16px 32px;
     color: #EBF4F6;
     cursor: pointer;
     display: inline-block;
-    /* font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif; */
     padding: 7px 20px;
     text-align: center;
     text-decoration: none;
@@ -84,11 +108,17 @@ canvas {
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
+    background: url('../assets/icons/arrow_restart.png');
+    background-size: 56px;
+    background-position: center;
 }
 
 .restart:hover {
     box-shadow: rgba(8, 130, 149, 0.35) 0 -25px 18px -14px inset,rgba(8, 130, 149, 0.25) 0 1px 2px,rgba(8, 130, 149, 0.25) 0 2px 4px,rgba(8, 130, 149, 0.25) 0 4px 8px,rgba(8, 130, 149, 0.25) 0 8px 16px,rgba(8, 130, 149, 0.25) 0 16px 32px;
     transform: scale(1.05) rotate(-1deg);
+    background: url('../assets/icons/arrow_restart_hover.png');
+    background-size: 56px;
+    background-position: center;
 }
 
 .modal { 
@@ -103,7 +133,6 @@ canvas {
     left: 50%;
     top: 50%;
     border-radius: 8px;
-    /* font-family: sans-serif; */
     display: none;
 }
 
