@@ -698,7 +698,7 @@ function printResult(result) {
             game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
 
             game.fillStyle = 'red';
-            game.font = `${responsiveFontSizeLarge - 1.4}rem retroGaming`;
+            game.font = `${responsiveFontSizeLarge - 1.1}rem retroGaming`;
             game.textAlign = 'center';
             game.fillText('¡FIN DE LA PARTIDA!', canvasSize / 2, canvasSize / 2);
             game.font = `${responsiveFontSizeSmall}px retroGaming`;
@@ -728,7 +728,7 @@ function printResult(result) {
             game.font = `${responsiveFontSizeLarge}rem retroGaming`;
             game.textAlign = 'center';
             game.fillText('¡HAS GANADO!', canvasSize / 2, canvasSize / 2);
-            game.font = `${responsiveFontSizeSmall - 6}px retroGaming`;
+            game.font = `${responsiveFontSizeSmall - 5}px retroGaming`;
             game.textAlign = 'center';
             
             game.fillText('¡Enhorabuena por tu victoria, pulsa el botón', canvasSize / 2, canvasSize / 1.7);
