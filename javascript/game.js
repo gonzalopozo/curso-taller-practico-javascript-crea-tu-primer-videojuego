@@ -594,6 +594,8 @@ function moveDown() {
 btnRestart.addEventListener('click', restartGame);
 
 function restartGame() {
+    pResult.style.display = 'none';
+
     level = 0;
     lives = 3;
 
@@ -696,7 +698,7 @@ function printResult(result) {
             game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
 
             game.fillStyle = 'red';
-            game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+            game.font = `${responsiveFontSizeLarge - 1.4}rem retroGaming`;
             game.textAlign = 'center';
             game.fillText('¡FIN DE LA PARTIDA!', canvasSize / 2, canvasSize / 2);
             game.font = `${responsiveFontSizeSmall}px retroGaming`;
