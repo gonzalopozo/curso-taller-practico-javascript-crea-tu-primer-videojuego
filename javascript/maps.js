@@ -11,7 +11,7 @@ const emojis = {
     'OBSTACLE_COLLISION': '🍜',
     'GAME_OVER': '👹',
     'WIN': '🏮',
-    'HEART': '🩶'
+    'HEART': '❤️'
 };
 
 const maps = [];

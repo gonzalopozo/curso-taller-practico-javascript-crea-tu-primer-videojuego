@@ -20,6 +20,7 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
+
 header h1 {
     text-align: center;
     color: #ca0b4a;
@@ -32,7 +33,7 @@ header h1 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    height: 100vh;
+    height: 87vh;
     align-items: center;
     width: 100%;
 }
@@ -51,7 +52,7 @@ canvas {
     width: 100%;
 }
 
-.btns > button {
+.btns button {
     cursor: pointer;
     border-style: none;
     margin: 0;
@@ -60,7 +61,7 @@ canvas {
     user-select: none;
 }
 
-.btns > button#up  {
+.up-button-container > button#up  {
     background: url('../assets/icons/arrow_up.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -140,15 +141,45 @@ canvas {
     text-align: center;
 }
 
-.modal > button {
+.modal button#change-lang {
+    display: none;
+    position: absolute;
+    left: 20px;
+    top: 25px;
+    cursor: pointer;
+    border-style: none;
+    margin: 0;
+    width: 65px;
+    height: 65px;
+    padding: 10px;
+    user-select: none;
+    background: url(../assets/icons/change_lang.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 4px solid #212943;
+    border-radius: 8px;
+    background-color: #FFF;
+    transition: all 750ms;
+}
+
+.modal button#change-lang:hover {
+    background-color: #CA0B4A;
+}
+
+.modal button#close {
     display: block;
-    margin: 0 0 20px auto;
+    margin: 0 0 0 auto;
     background-color: transparent;
     font-size: 30px;
     color: #EBF4F6;
     border: none;
     outline: none;
     cursor: pointer;
+}
+
+.modal ul {
+    padding-left: 30px;
 }
 
 .modal p {
@@ -168,17 +199,32 @@ canvas {
 }
 
 .messages {
+    position: absolute;
+    right: 6%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    flex-wrap: nowrap;
+    width: auto;
+    border: 4px solid #088395;
+    border-radius: 8px;
+    background-color: #37B7C3;
+    color: #EBF4F6;
+    flex-direction: column;
+    padding: 10px 0 10px 10px;
     align-items: center;
-    margin: 10px auto 0 auto;
-    width: 80%;
-    max-width: 460px;
 }
 
 .messages .internal-container {
-    width: 55%;
+    width: 245px;
+    /* max-width: 245px; */
+}
+
+.messages .internal-container #result {
+    display: none;
+    background-color: #CA0B4A;
+    border: 3px solid #EBF4F6;
+    padding: 5px 0 5px 5px;
+    margin: 10px auto 10px -5px;
+    border-radius: 8px;
 }
 
 .messages button {
@@ -190,6 +236,7 @@ canvas {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    transition: all 250ms;
 }
 
 .messages button:hover {
@@ -209,17 +256,69 @@ p {
     width: 100%;
 }
 
-@media (max-width: 600px) {
-    button { 
-        margin: 5px; 
+@media (max-width: 1180px) {
+    header h1 {
+        margin: 20px 0 10px 0;
+        font-size: 2.3rem;
     }
-    
-    #up, #down {
-        margin-left: 100%; margin-right: 100%;
+
+    .up-button-container {
+        display: flex;
+        width: 100vw;
+        justify-content: center;
+    }
+
+    .btns #left {
+        margin-left: 9px;
+    }
+
+    .restart-button-container {
+        display: flex;
+        width: 100vw;
+        justify-content: center;
+        margin-top: 17.5px;
+    }
+
+
+
+    .btns{
+        margin:  25px auto 10px auto;
+    }
+
+    .btns button {
+        width: 55px;
+        height: 55px;
+    }
+
+    .messages {
+        position: static;
+        margin:  25px auto 15px auto;
     }
 
     .restart {
-        margin-left: 0px;
-        margin-top: 30px;
+        background-size: 46px;
     }
+
+    .modal {
+        width: 90vw;
+        padding: 15px 15px;
+    }
+
+    .modal button#change-lang {
+        left: 20px;
+        top: 8px;
+        width: 45px;
+        height: 45px;
+    }
+
+    .modal h1 {
+        font-size: 1.5rem;
+    }
+
+    .modal p {
+        margin-top: 3px;
+        font-size: 0.831rem;
+    }
+
+    
 }

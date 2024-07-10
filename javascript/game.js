@@ -18,6 +18,7 @@ const countriesContainer = document.querySelector('#flags-container');
 const paragraphModal = document.querySelector('.modal > p');
 const btnHelp = document.querySelector('.messages button');
 const header = document.querySelector('header');
+const btnChangeLang = document.querySelector('#change-lang');
 
 let canvasSize;
 let elementsSize;
@@ -61,12 +62,14 @@ window.addEventListener('load', setCanvasSize);
 closeBtnModal.addEventListener('click', closeModal);
 window.addEventListener('resize', setCanvasSize);
 btnHelp.addEventListener('click', showHelpModal);
+btnChangeLang.addEventListener('click', changeLangModal);
 
 
 function openModal() {
     const lang = localStorage.getItem('lang');
 
     if (!lang) {
+        header.style.display = 'none'
         modal.style.display = 'block';
         gameContainer.style.display = 'none';
         closeBtnModal.style.display = 'none';
@@ -94,12 +97,15 @@ function addEventsListenerToEachCountry() {
 function turnModalIntoHelpModal () {
     const lang = localStorage.getItem('lang');
 
+    btnChangeLang.style.display = 'block';
+    
+
     closeBtnModal.style.display = 'block';
     countriesContainer.style.display = 'none';
 
     if (lang === 'uk') {
         titleModal.innerHTML = `How to play Dragon's Gate Journey?`;
-        paragraphModal.innerHTML = `<b>Dragon's Gate Journey</b> is an exciting adventure game where you control a <b>dragon</b> 🐉. The goal is to guide the dragon from the <b>torii gate</b> ⛩️ to the <b>Japanese castle</b> 🏯, dodging the <b>chopsticks</b> 🥢 which, if hit, will turn into <b>bowls of ramen</b> 🍜. <br><br> If you manage to complete all levels, you will reach the <b>lantern walk</b> 🏮, celebrating your victory. However, if you lose all your lives (three hearts 🩶), the <b>oni demon</b> 👹 will appear, indicating your defeat.
+        paragraphModal.innerHTML = `<b>Dragon's Gate Journey</b> is an exciting adventure game where you control a <b>dragon</b> 🐉. The goal is to guide the dragon from the <b>torii gate</b> ⛩️ to the <b>Japanese castle</b> 🏯, dodging the <b>chopsticks</b> 🥢 which, if hit, will turn into <b>bowls of ramen</b> 🍜. <br><br> If you manage to complete all levels, you will reach the <b>lantern walk</b> 🏮, celebrating your victory. However, if you lose all your lives (three hearts ❤️), the <b>oni demon</b> 👹 will appear, indicating your defeat.
         
         <br><br>
 
@@ -112,7 +118,7 @@ function turnModalIntoHelpModal () {
         `;
     } else if (lang === 'es') {
         titleModal.innerHTML = `¿Como jugar a Dragon's Gate Journey?`;
-        paragraphModal.innerHTML = `<b>Dragon's Gate Journey</b> es un emocionante juego de aventura en el que controlas a un <b>dragón</b> 🐉. El objetivo es guiar al dragón desde la <b>puerta torii</b> ⛩️ hasta el <b>castillo japonés</b> 🏯, esquivando los <b>palillos</b> 🥢 que, si los chocas, se convertirán en <b>tazones de ramen</b> 🍜. <br><br> Si logras completar todos los niveles, llegarás al <b>paseo de las linternas</b> 🏮, celebrando tu victoria. Sin embargo, si pierdes todas tus vidas (tres corazones 🩶), aparecerá el <b>demonio oni</b> 👹, indicando tu derrota.
+        paragraphModal.innerHTML = `<b>Dragon's Gate Journey</b> es un emocionante juego de aventura en el que controlas a un <b>dragón</b> 🐉. El objetivo es guiar al dragón desde la <b>puerta torii</b> ⛩️ hasta el <b>castillo japonés</b> 🏯, esquivando los <b>palillos</b> 🥢 que, si los chocas, se convertirán en <b>tazones de ramen</b> 🍜. <br><br> Si logras completar todos los niveles, llegarás al <b>paseo de las linternas</b> 🏮, celebrando tu victoria. Sin embargo, si pierdes todas tus vidas (tres corazones ❤️), aparecerá el <b>demonio oni</b> 👹, indicando tu derrota.
         
         <br><br>
 
@@ -138,6 +144,7 @@ function showHelpModal() {
     const lang = localStorage.getItem('lang');
 
     if (lang) {
+        // btnChangeLang.style.display = 'block'
         modal.style.display = 'block';
         gameContainer.style.display = 'none';
         header.style.display = 'none';
@@ -146,6 +153,14 @@ function showHelpModal() {
     }
 }
 
+function changeLangModal() {
+    btnChangeLang.style.display = 'none';
+    closeBtnModal.style.display = 'none';
+    countriesContainer.style.display = 'flex';
+
+    titleModal.innerHTML = `¡SELECT YOUR LANGUAGE!`;
+    paragraphModal.innerHTML = '';
+}
 
 function setCanvasSize() {
     if (window.innerHeight > window.innerWidth) {
@@ -378,6 +393,8 @@ function gameWin() {
     const playerTime = Date.now() - timeStart;
 
     if (recordTime) {
+        pResult.style.display = 'block';
+
         if (recordTime >= playerTime) {
             localStorage.setItem('record_time', playerTime);
             pResult.innerHTML = '¡SUPERASTE EL RECORD! 🏆';
@@ -386,6 +403,7 @@ function gameWin() {
             console.log({recordTime, playerTime});
         }
     } else {
+        pResult.style.display = 'block';
         localStorage.setItem('record_time', playerTime);
         pResult.innerHTML = '¡Para ser la primera vez, lo hiciste bien, pero sé que puedes hacerlo mejor 💪!';
     }
@@ -409,12 +427,12 @@ function gameWin() {
             game.textAlign = "end";
             game.fillText(emojis['WIN'], obstacle.posX, obstacle.posY);
 
-            if (delay >= (obstaclePositions.length - 1) * 10) {
+            if (delay >= (obstaclePositions.length - 1) * 20) {
                 printResult('win');
             }
         }, delay);
 
-        delay += 25;
+        delay += 20;
     });
 
     
@@ -658,30 +676,62 @@ function printResult(result) {
     const responsiveFontSizeLarge = (canvasSize / 500) * baseFontSizeLarge;
     const responsiveFontSizeSmall = (canvasSize / 500) * baseFontSizeSmall;
 
+    const lang = localStorage.getItem('lang');
+
     if (result === 'lost') {
-        game.fillStyle = 'black';
-        game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
+        if (lang === 'uk') {
+            game.fillStyle = 'black';
+            game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
 
-        game.fillStyle = 'red';
-        game.font = `${responsiveFontSizeLarge}rem retroGaming`;
-        game.textAlign = 'center';
-        game.fillText('¡GAME OVER!', canvasSize / 2, canvasSize / 2);
-        game.font = `${responsiveFontSizeSmall}px retroGaming`;
-        game.textAlign = 'center';
-        game.fillText('¡Pulsa el botón de restart', canvasSize / 2, canvasSize / 1.7);
-        game.fillText('para volver a jugar!', canvasSize / 2, canvasSize / 1.575);
+            game.fillStyle = 'red';
+            game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+            game.textAlign = 'center';
+            game.fillText('GAME OVER!', canvasSize / 2, canvasSize / 2);
+            game.font = `${responsiveFontSizeSmall}px retroGaming`;
+            game.textAlign = 'center';
+            game.fillText(' Press the restart button', canvasSize / 2, canvasSize / 1.7);
+            game.fillText(' to play again!', canvasSize / 2, canvasSize / 1.575);
+        } else if (lang === 'es') {
+            game.fillStyle = 'black';
+            game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
+
+            game.fillStyle = 'red';
+            game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+            game.textAlign = 'center';
+            game.fillText('¡FIN DE LA PARTIDA!', canvasSize / 2, canvasSize / 2);
+            game.font = `${responsiveFontSizeSmall}px retroGaming`;
+            game.textAlign = 'center';
+            game.fillText('¡Pulsa el botón de restart', canvasSize / 2, canvasSize / 1.7);
+            game.fillText('para volver a jugar!', canvasSize / 2, canvasSize / 1.575);
+        }
     } else if (result === 'win') {
-        game.fillStyle = 'black';
-        game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
+        if (lang === 'uk') {
+            game.fillStyle = 'black';
+            game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
 
-        game.fillStyle = '#D4AF37';
-        game.font = `${responsiveFontSizeLarge}rem retroGaming`;
-        game.textAlign = 'center';
-        game.fillText('YOU WIN!', canvasSize / 2, canvasSize / 2);
-        game.font = `${responsiveFontSizeSmall - 4}px retroGaming`;
-        game.textAlign = 'center';
+            game.fillStyle = '#D4AF37';
+            game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+            game.textAlign = 'center';
+            game.fillText('YOU WIN!', canvasSize / 2, canvasSize / 2);
+            game.font = `${responsiveFontSizeSmall - 6}px retroGaming`;
+            game.textAlign = 'center';
+            
+            game.fillText('Congratulations on your victory, press the', canvasSize / 2, canvasSize / 1.7);
+            game.fillText('restart button to try to beat your record!', canvasSize / 2, canvasSize / 1.575);
+        } else if (lang === 'es') {
+            game.fillStyle = 'black';
+            game.fillRect(0, canvasSize / 3, canvasSize, canvasSize / 3);
+
+            game.fillStyle = '#D4AF37';
+            game.font = `${responsiveFontSizeLarge}rem retroGaming`;
+            game.textAlign = 'center';
+            game.fillText('¡HAS GANADO!', canvasSize / 2, canvasSize / 2);
+            game.font = `${responsiveFontSizeSmall - 6}px retroGaming`;
+            game.textAlign = 'center';
+            
+            game.fillText('¡Enhorabuena por tu victoria, pulsa el botón', canvasSize / 2, canvasSize / 1.7);
+            game.fillText('de restart para conseguir batir tu récord!', canvasSize / 2, canvasSize / 1.575);
+        }
         
-        game.fillText('¡Enhorabuena por tu victoria, pulsa el botón', canvasSize / 2, canvasSize / 1.7);
-        game.fillText('de restart para conseguir batir tu récord!', canvasSize / 2, canvasSize / 1.575);
     }
 }

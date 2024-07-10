@@ -12,6 +12,7 @@
 </head>
 <body>
     <div class="modal">
+        <button id="change-lang"></button>
         <button id="close">&times;</button>
         <h1>¡SELECT YOUR LANGUAGE!</h1>
         <div id="flags-container">
@@ -35,12 +36,16 @@
         <canvas id="game"></canvas>
 
         <div class="btns">
-            <button id="up"></button>
+            <div class="up-button-container">
+                <button id="up"></button>
+            </div>
             <button id="left"></button>
-            <button id="right"></button>
             <button id="down"></button>
+            <button id="right"></button>
 
-            <button class="restart"></button>
+            <div class="restart-button-container">
+                <button class="restart"></button>
+            </div>
         </div>
 
         <div class="messages">
@@ -56,7 +61,7 @@
         </div>
     </div>
 
-    <script src="./javascript/maps.js"></script>
+    <script src="./javascript/maps.js"></script>    
     <script src="./javascript/game.js"></script>
 </body>
 </html>
